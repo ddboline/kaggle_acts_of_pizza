@@ -71,19 +71,19 @@ def load_data():
         df['requester_days_since_first_post_on_raop_at_request'] = df['requester_days_since_first_post_on_raop_at_request'].astype(np.int64)
 
     ytrain = train_df['requester_received_pizza'].astype(np.int64).values
-    print len(ytrain), ytrain.sum()
+    #print len(ytrain), ytrain.sum()
     
     train_df = train_df.drop(labels=['requester_received_pizza'], axis=1)
     
-    print train_df.shape, test_df.shape
-    print train_df.columns
-    print test_df.columns
+    #print train_df.shape, test_df.shape
+    #print train_df.columns
+    #print test_df.columns
     
     xtrain = train_df.values[:,2:]
     xtest = test_df.values[:,2:]
     ytest = test_df.values[:,1]
     
-    print xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
+    #print xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
     #print xtrain
     #print ytrain
     #print xtest
@@ -149,15 +149,15 @@ def prepare_submission(model, xtrain, ytrain, xtest, ytest):
 if __name__ == '__main__':
     xtrain, ytrain, xtest, ytest = load_data()
     
-    #pca = PCA(n_components=4)
-    #x_pca = np.vstack([xtrain, xtest])
-    #print x_pca.shape
-    #pca.fit(xtrain)
+    pca = PCA()
+    x_pca = np.vstack([xtrain, xtest])
+    print x_pca.shape
+    pca.fit(xtrain)
     
-    #xtrain = pca.transform(xtrain)
-    #xtest = pca.transform(xtest)
+    xtrain = pca.transform(xtrain)
+    xtest = pca.transform(xtest)
     
-    compare_models(xtrain, ytrain)
+    #compare_models(xtrain, ytrain)
     model = RandomForestClassifier(n_estimators=400, n_jobs=-1)
     print 'score', score_model(model, xtrain, ytrain)
     print model.feature_importances_
