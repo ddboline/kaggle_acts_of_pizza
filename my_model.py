@@ -17,6 +17,8 @@ from sklearn import cross_validation
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.decomposition import PCA
 
+from sklearn.metrics import roc_auc_score
+
 def review_to_wordlist(review, remove_stopwords=False):
     # Function to convert a document to a sequence of words,
     # optionally removing stop words.  Returns a list of words.
@@ -32,6 +34,8 @@ def review_to_wordlist(review, remove_stopwords=False):
     #
     # 4. Optionally remove stop words (false by default)
     if remove_stopwords:
+        from nltk.corpus import stopwords
+
         stops = set(stopwords.words("english"))
         words = [w for w in words if not w in stops]
     #
@@ -44,16 +48,6 @@ def load_data():
     test_df = pd.read_json('test.json')
     subm_df = pd.read_csv('sampleSubmission.csv')
 
-    #train_df = train_df.drop(labels=['giver_username_if_known', 'request_id'], axis=1)
-    #test_df = test_df.drop(labels=['giver_username_if_known', 'request_id'], axis=1)
-    
-    #print train_df.shape, test_df.shape
-    #print '\n'.join(train_df.columns)
-    #print '\n\n%s' % '\n'.join(test_df.columns)
-    #print '\n\n%s' % '\n'.join(subm_df.columns)
-    
-    #print ['%s' % c for c in train_df.columns if c not in test_df.columns]
-    
     YCOL = u'requester_received_pizza'
 
     XCOLS_KEEP = [u'requester_account_age_in_days_at_request', u'requester_days_since_first_post_on_raop_at_request', u'requester_number_of_comments_at_request', u'requester_number_of_comments_in_raop_at_request', u'requester_number_of_posts_at_request', u'requester_number_of_posts_on_raop_at_request', u'requester_number_of_subreddits_at_request', u'requester_upvotes_minus_downvotes_at_request', u'requester_upvotes_plus_downvotes_at_request', u'unix_timestamp_of_request', u'unix_timestamp_of_request_utc']
@@ -97,7 +91,8 @@ def score_model(model, xtrain, ytrain):
                                                                      ytrain,
                                                                      test_size=0.4, random_state=randint)
     model.fit(xTrain, yTrain)
-    
+    ytpred = model.predict(xTest)
+    print 'roc', roc_auc_score(yTest, ytpred)
     return model.score(xTest, yTest)
 
 def compare_models(xtraindata, ytraindata):
@@ -157,7 +152,7 @@ if __name__ == '__main__':
     #xtrain = pca.transform(xtrain)
     #xtest = pca.transform(xtest)
     
-    compare_models(xtrain, ytrain)
+    #compare_models(xtrain, ytrain)
     model = RandomForestClassifier(n_estimators=400, n_jobs=-1)
     print 'score', score_model(model, xtrain, ytrain)
     print model.feature_importances_
