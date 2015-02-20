@@ -141,7 +141,7 @@ def prepare_submission(model, xtrain, ytrain, xtest, ytest):
     ytest2 = model.predict(xtest)
     request_id = ytest
     
-    df = pd.DataFrame({'request_id': ids, 'requester_received_pizza': ytest2}, columns=('request_id','requester_received_pizza'))
+    df = pd.DataFrame({'request_id': request_id, 'requester_received_pizza': ytest2}, columns=('request_id','requester_received_pizza'))
     df.to_csv('submission.csv', index=False)
     
     return
