@@ -149,13 +149,13 @@ def prepare_submission(model, xtrain, ytrain, xtest, ytest):
 if __name__ == '__main__':
     xtrain, ytrain, xtest, ytest = load_data()
     
-    pca = PCA()
-    x_pca = np.vstack([xtrain, xtest])
-    print x_pca.shape
-    pca.fit(xtrain)
+    #pca = PCA()
+    #x_pca = np.vstack([xtrain, xtest])
+    #print x_pca.shape
+    #pca.fit(xtrain)
     
-    xtrain = pca.transform(xtrain)
-    xtest = pca.transform(xtest)
+    #xtrain = pca.transform(xtrain)
+    #xtest = pca.transform(xtest)
     
     #compare_models(xtrain, ytrain)
     model = RandomForestClassifier(n_estimators=400, n_jobs=-1)
