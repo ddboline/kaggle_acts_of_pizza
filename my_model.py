@@ -84,10 +84,10 @@ def load_data():
     ytest = test_df.values[:,1]
     
     print xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
-    print xtrain
-    print ytrain
-    print xtest
-    print ytest
+    #print xtrain
+    #print ytrain
+    #print xtest
+    #print ytest
     
     return xtrain, ytrain, xtest, ytest
 
@@ -139,9 +139,9 @@ def compare_models(xtraindata, ytraindata):
 def prepare_submission(model, xtrain, ytrain, xtest, ytest):
     model.fit(xtrain, ytrain)
     ytest2 = model.predict(xtest)
-    ids = ytest
+    request_id = ytest
     
-    df = pd.DataFrame({'id': ids, 'hand': ytest2}, columns=('id','hand'))
+    df = pd.DataFrame({'request_id': ids, 'requester_received_pizza': ytest2}, columns=('request_id','requester_received_pizza'))
     df.to_csv('submission.csv', index=False)
     
     return
