@@ -21,6 +21,10 @@ from sklearn.metrics import roc_auc_score
 
 from sklearn.feature_extraction.text import CountVectorizer
 
+from sklearn.preprocessing import StandardScaler
+
+from sklearn.pipeline import Pipeline
+
 def review_to_wordlist(review, remove_stopwords=False):
     # Function to convert a document to a sequence of words,
     # optionally removing stop words.  Returns a list of words.
@@ -155,24 +159,25 @@ def compare_models(xtraindata, ytraindata):
     from sklearn.qda import QDA
 
     classifier_dict = {
-                #'linSVC': LinearSVC(),
+                'linSVC': LinearSVC(),
                 'kNC5': KNeighborsClassifier(),
                 'kNC6': KNeighborsClassifier(6),
                 'SVC': SVC(kernel="linear", C=0.025),
-                #'DT': DecisionTreeClassifier(max_depth=5),
+                'DT': DecisionTreeClassifier(max_depth=5),
                 #'RF200': RandomForestClassifier(n_estimators=200, n_jobs=-1),
                 'RF400': RandomForestClassifier(n_estimators=400, n_jobs=-1),
                 #'RF800': RandomForestClassifier(n_estimators=800, n_jobs=-1),
                 #'RF1000': RandomForestClassifier(n_estimators=1000, n_jobs=-1),
-                #'Ada': AdaBoostClassifier(),
-                #'Gauss': GaussianNB(),
-                #'LDA': LDA(),
-                #'QDA': QDA(),
-                #'SVC2': SVC(),
+                'Ada': AdaBoostClassifier(),
+                'Gauss': GaussianNB(),
+                'LDA': LDA(),
+                'QDA': QDA(),
+                'SVC2': SVC(),
                 }
 
     results = {}
-    for name, model in classifier_dict.items():
+    for name, mod in classifier_dict.items():
+        model = Pipeline([('scale', StandardScaler()), (name, mod)])
         print name
         results[name] = score_model(model, xtraindata, ytraindata)
         print name, results[name]
@@ -195,15 +200,7 @@ if __name__ == '__main__':
     xtrain, ytrain, xtest, ytest = load_data()
     
     print xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
-    
-    #pca = PCA(n_components=10)
-    #x_pca = np.vstack([xtrain, xtest])
-    #print x_pca.shape
-    #pca.fit(xtrain)
-    
-    #xtrain = pca.transform(xtrain)
-    #xtest = pca.transform(xtest)
-    
+   
     compare_models(xtrain, ytrain)
     #model = RandomForestClassifier(n_estimators=800, n_jobs=-1)
     #print 'score', score_model(model, xtrain, ytrain)
