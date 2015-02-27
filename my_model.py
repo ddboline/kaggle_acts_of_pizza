@@ -126,7 +126,8 @@ def score_model(model, xtrain, ytrain):
     model.fit(xTrain, yTrain)
     ytpred = model.predict(xTest)
     print 'roc', roc_auc_score(yTest, ytpred)
-    return model.score(xTest, yTest)
+    print 'score', model.score(xTest, yTest)
+    return roc_auc_score(yTest, ytpred)
 
 def compare_models(xtraindata, ytraindata):
     from sklearn.neighbors import KNeighborsClassifier
@@ -138,7 +139,7 @@ def compare_models(xtraindata, ytraindata):
     from sklearn.qda import QDA
 
     classifier_dict = {
-                'linSVC': LinearSVC(),
+                #'linSVC': LinearSVC(),
                 'kNC5': KNeighborsClassifier(),
                 'kNC6': KNeighborsClassifier(6),
                 'SVC': SVC(kernel="linear", C=0.025),
@@ -181,7 +182,8 @@ if __name__ == '__main__':
     print xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
    
     #compare_models(xtrain, ytrain)
-    model = RandomForestClassifier(n_estimators=800, n_jobs=-1)
+    model = Pipeline([('scale', StandardScaler()), 
+                      ('rf800', RandomForestClassifier(n_estimators=800, n_jobs=-1))])
     print 'score', score_model(model, xtrain, ytrain)
     print model.feature_importances_
     prepare_submission(model, xtrain, ytrain, xtest, ytest)
