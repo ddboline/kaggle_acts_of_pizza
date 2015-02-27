@@ -146,8 +146,8 @@ def compare_models(xtraindata, ytraindata):
 
     classifier_dict = {
                 #'linSVC': LinearSVC(),
-                'kNC5': KNeighborsClassifier(),
-                'kNC6': KNeighborsClassifier(6),
+                #'kNC5': KNeighborsClassifier(),
+                #'kNC6': KNeighborsClassifier(6),
                 #'SVC': SVC(kernel="linear", C=0.025),
                 #'DT': DecisionTreeClassifier(max_depth=5),
                 #'RF200': RandomForestClassifier(n_estimators=200, n_jobs=-1),
@@ -179,6 +179,9 @@ def compare_models(xtraindata, ytraindata):
         results[name] = roc_auc_score(yTest, ytpred)
         ytest_vals[name] = ytpred
         print name, results[name], ytest_vals[name]
+    print '\n\n\n'
+    ytest_comb = np.sum(y for y in ytest_vals.values())
+    print ytest_comb
     print '\n\n\n'
     for name, result in sorted(results.items(), key=lambda x: x[1]):
         print name, result
