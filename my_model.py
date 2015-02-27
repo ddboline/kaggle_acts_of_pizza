@@ -182,6 +182,10 @@ def compare_models(xtraindata, ytraindata):
     print '\n\n\n'
     for name, result in sorted(results.items(), key=lambda x: x[1]):
         print name, result
+        for n in ytest_vals:
+            if n == name:
+                continue
+            print np.sum(np.abs(ytest_vals[name] - ytest_vals[n]))
 
 
 def prepare_submission(model, xtrain, ytrain, xtest, ytest):
