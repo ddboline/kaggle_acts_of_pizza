@@ -97,6 +97,9 @@ def load_data():
         df['requester_account_age_in_days_at_request'] = df['requester_account_age_in_days_at_request'].astype(np.int64)
         df['requester_days_since_first_post_on_raop_at_request'] = df['requester_days_since_first_post_on_raop_at_request'].astype(np.int64)
 
+    for c in train_df.columns:
+        print c, train_df[c].dtype
+
     ytrain = train_df['requester_received_pizza'].astype(np.int64).values
     #print len(ytrain), ytrain.sum()
     
