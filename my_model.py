@@ -93,21 +93,16 @@ def load_data():
                                   #train_df['request_title'].values,
                                   #test_df['request_title'].values), axis=0)
 
-    train_vectorizer = np.concatenate((train_df['request_text_edit_aware'].values, 
-                                  test_df['request_text_edit_aware'].values,
-                                  train_df['request_title'].values,
-                                  test_df['request_title'].values))
-
-    print train_vectorizer.shape
-
-    print train_df['request_text_edit_aware'].head()
+    #train_vectorizer = np.concatenate((train_df['request_text_edit_aware'].values, 
+                                  #test_df['request_text_edit_aware'].values,
+                                  #train_df['request_title'].values,
+                                  #test_df['request_title'].values))
 
     nfeatures=1000
     print 'nfeatures', nfeatures
     vectorizer = CountVectorizer(analyzer='word', tokenizer=None,  preprocessor=None, stop_words=None, max_features=nfeatures)
-    vectorizer = vectorizer.fit(train_vectorizer)
+    train_df['request_text_edit_aware'] = vectorizer.fit_transform(train_df['request_text_edit_aware'].values).toarray()
     
-    train_df['request_text_edit_aware'] = vectorizer.transform(train_df['request_text_edit_aware'].values).toarray()
     test_df['request_text_edit_aware'] = vectorizer.transform(test_df['request_text_edit_aware'].values).toarray()
     train_df['request_title'] = vectorizer.transform(train_df['request_title'].values).toarray()
     test_df['request_title'] = vectorizer.transform(test_df['request_title'].values).toarray()
