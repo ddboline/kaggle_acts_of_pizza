@@ -181,7 +181,7 @@ def compare_models(xtraindata, ytraindata):
         print name, results[name], ytest_vals[name]
     print '\n\n\n'
     ytest_comb = np.sum(y for y in ytest_vals.values())
-    print ytest_comb
+    ytest_majority = (ytest_comb > len(ytest_vals)/2).astype(np.int64)
     print '\n\n\n'
     for name, result in sorted(results.items(), key=lambda x: x[1]):
         print name, result
