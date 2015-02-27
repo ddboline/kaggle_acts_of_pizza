@@ -86,7 +86,8 @@ def load_data():
     
     print train_review_features.shape, test_review_features.shape, train_title_features.shape, test_title_features.shape
     
-    exit(0)
+    train_df = train_df.drop(labels=['request_text_edit_aware', 'request_title'], axis=1)
+    test_df = test_df.drop(labels=['request_text_edit_aware', 'request_title'], axis=1)
     
     for df in train_df, test_df:
         #df['request_text_edit_aware'] = df['request_text_edit_aware'].map(review_to_wordlist).map(len)
@@ -105,8 +106,8 @@ def load_data():
     #print train_df.columns
     #print test_df.columns
     
-    xtrain = train_df.values[:,2:]
-    xtest = test_df.values[:,2:]
+    xtrain = np.hstack([train_df.values[:,2:], train_review_features, train_title_features])
+    xtest = np.hstack([test_df.values[:,2:], test_review_features, test_title_features])
     ytest = test_df.values[:,1]
     
     print xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
