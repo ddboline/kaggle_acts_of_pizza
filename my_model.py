@@ -100,6 +100,8 @@ def load_data():
 
     print train_vectorizer.shape
 
+    print train_df['request_text_edit_aware'].head()
+
     nfeatures=1000
     print 'nfeatures', nfeatures
     vectorizer = CountVectorizer(analyzer='word', tokenizer=None,  preprocessor=None, stop_words=None, max_features=nfeatures)
