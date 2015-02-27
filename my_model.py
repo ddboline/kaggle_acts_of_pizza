@@ -186,6 +186,10 @@ def compare_models(xtraindata, ytraindata):
     
     print 'majority', roc_auc_score(yTest, ytest_majority)
     print 'any', roc_auc_score(yTest, ytest_any)
+    for n in range(1,len(ytest_vals)):
+        ytest_n = (ytest_comb > n).astype(np.int64)
+        if np.sum(ytest_n) > 0 :
+            print 'n', n, roc_auc_score(yTest, ytest_n)
     
     print '\n\n\n'
     for name, result in sorted(results.items(), key=lambda x: x[1]):
