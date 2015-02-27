@@ -170,11 +170,17 @@ def compare_models(xtraindata, ytraindata):
     xTrain, xTest, yTrain, yTest = cross_validation.train_test_split(xtrain,
                                                                      ytrain,
                                                                      test_size=0.4, random_state=randint)
+    scale = StandardScaler()
+    xTrain = scale.fit_transform(xTrain)
+    xTest = scale.transform(xTest)
+    pca = PCA(n_components='mle')
+    xTrain = pca.fit_transform(xTrain)
+    xTest = pca.transform(xTest)
 
-    for name, mod in classifier_dict.items():
-        model = Pipeline([('scale', StandardScaler()),
-                          ('pca', PCA(n_components='mle')),
-                          (name, mod),])
+    for name, model in classifier_dict.items():
+        #model = Pipeline([('scale', StandardScaler()),
+                          #('pca', PCA(n_components='mle')),
+                          #(name, mod),])
         print name
         model.fit(xTrain, yTrain)
         ytpred = model.predict(xTest)
