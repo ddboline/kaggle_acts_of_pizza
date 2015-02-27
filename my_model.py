@@ -76,7 +76,7 @@ def load_data():
         for c in 'request_text_edit_aware', 'request_title':
             print c, df[c].shape
 
-    nfeatures=1000
+    nfeatures=100
     print 'nfeatures', nfeatures
     vectorizer = CountVectorizer(analyzer='word', tokenizer=None,  preprocessor=None, stop_words=None, max_features=nfeatures)
     train_review_features = vectorizer.fit_transform(clean_train_review).toarray()
