@@ -72,9 +72,9 @@ def load_data():
     clean_train_title = train_df['request_title'].apply(clean_review_function)
     clean_test_title = test_df['request_title'].apply(clean_review_function)
 
-    for df in train_df, test_df:
-        for c in 'request_text_edit_aware', 'request_title':
-            print c, df[c].shape
+    #for df in train_df, test_df:
+        #for c in 'request_text_edit_aware', 'request_title':
+            #print c, df[c].shape
 
     nfeatures=1000
     print 'nfeatures', nfeatures
@@ -103,7 +103,7 @@ def load_data():
     train_df = train_df.drop(labels=['requester_received_pizza'], axis=1)
 
     for c in train_df.columns:
-        print c, train_df[c].dtype
+        #print c, train_df[c].dtype
         if train_df[c].dtype == np.int64:
             train_df[c] = train_df[c].astype(np.float64)
             test_df[c] = test_df[c].astype(np.float64)
@@ -117,10 +117,10 @@ def load_data():
     ytest = test_df.values[:,1]
     
     print xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
-    print xtrain
-    print ytrain
-    print xtest
-    print ytest
+    #print xtrain
+    #print ytrain
+    #print xtest
+    #print ytest
     
     return xtrain, ytrain, xtest, ytest
 
@@ -185,7 +185,7 @@ def compare_models(xtraindata, ytraindata):
         for n in ytest_vals:
             if n == name:
                 continue
-            print np.sum(np.abs(ytest_vals[name] - ytest_vals[n]))
+            print name, n, len(ytest_vals[name]), np.sum(np.abs(ytest_vals[name] - ytest_vals[n]))
 
 
 def prepare_submission(model, xtrain, ytrain, xtest, ytest):
