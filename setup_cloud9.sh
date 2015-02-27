@@ -8,3 +8,5 @@ for F in *.zip;
 do
     unzip -x $F;
 done
+
+ssh ddboline@ddbolineathome.mooo.com "~/bin/send_to_gtalk DONE"
