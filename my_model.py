@@ -154,10 +154,10 @@ def compare_models(xtraindata, ytraindata):
                 #'RF400': RandomForestClassifier(n_estimators=400, n_jobs=-1),
                 #'RF800': RandomForestClassifier(n_estimators=800, n_jobs=-1),
                 #'RF1000': RandomForestClassifier(n_estimators=1000, n_jobs=-1),
-                'Ada': AdaBoostClassifier(),
-                'SVClin': SVC(kernel='linear'),
-                'SVCpoly': SVC(kernel='poly'),
-                'SVCsigmoid': SVC(kernel='sigmoid'),
+                #'Ada': AdaBoostClassifier(),
+                #'SVClin': SVC(kernel='linear'),
+                #'SVCpoly': SVC(kernel='poly'),
+                #'SVCsigmoid': SVC(kernel='sigmoid'),
                 #'Gauss': GaussianNB(),
                 #'LDA': LDA(),
                 #'QDA': QDA(),
@@ -191,9 +191,9 @@ if __name__ == '__main__':
     print xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
    
     compare_models(xtrain, ytrain)
-    #model = Pipeline([('scale', StandardScaler()), 
-                      #('rf800', RandomForestClassifier(n_estimators=800, n_jobs=-1))])
-    #print 'score', score_model(model, xtrain, ytrain)
-    #print model.feature_importances_
-    #prepare_submission(model, xtrain, ytrain, xtest, ytest)
+    model = Pipeline([('scale', StandardScaler()), 
+                      ('rf800', RandomForestClassifier(n_estimators=800, n_jobs=-1))])
+    print 'score', score_model(model, xtrain, ytrain)
+    print model.feature_importances_
+    prepare_submission(model, xtrain, ytrain, xtest, ytest)
     
