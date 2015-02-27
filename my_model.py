@@ -152,24 +152,33 @@ def compare_models(xtraindata, ytraindata):
                 #'DT': DecisionTreeClassifier(max_depth=5),
                 #'RF200': RandomForestClassifier(n_estimators=200, n_jobs=-1),
                 #'RF400': RandomForestClassifier(n_estimators=400, n_jobs=-1),
-                #'RF800': RandomForestClassifier(n_estimators=800, n_jobs=-1),
+                'RF800': RandomForestClassifier(n_estimators=800, n_jobs=-1),
                 #'RF1000': RandomForestClassifier(n_estimators=1000, n_jobs=-1),
-                #'Ada': AdaBoostClassifier(),
+                'Ada': AdaBoostClassifier(),
                 #'SVClin': SVC(kernel='linear'),
                 #'SVCpoly': SVC(kernel='poly'),
                 #'SVCsigmoid': SVC(kernel='sigmoid'),
                 #'Gauss': GaussianNB(),
                 #'LDA': LDA(),
                 #'QDA': QDA(),
-                #'SVC2': SVC(),
+                'SVC': SVC(),
                 }
 
     results = {}
+    ytest_vals = {}
+    randint = reduce(lambda x,y: x|y, [ord(x)<<(n*8) for (n,x) in enumerate(os.urandom(4))])
+    xTrain, xTest, yTrain, yTest = cross_validation.train_test_split(xtrain,
+                                                                     ytrain,
+                                                                     test_size=0.4, random_state=randint)
+
     for name, mod in classifier_dict.items():
         model = Pipeline([('scale', StandardScaler()), (name, mod)])
         print name
-        results[name] = score_model(model, xtraindata, ytraindata)
-        print name, results[name]
+        model.fit(xTrain, yTrain)
+        ytpred = model.predict(xTest)
+        results[name] = roc_auc_score(yTest, ytpred)
+        ytest_vals[name] = ytpred
+        print name, results[name], ytest_vals[name]
     print '\n\n\n'
     for name, result in sorted(results.items(), key=lambda x: x[1]):
         print name, result
@@ -191,9 +200,9 @@ if __name__ == '__main__':
     print xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
    
     compare_models(xtrain, ytrain)
-    model = Pipeline([('scale', StandardScaler()), 
-                      ('rf800', RandomForestClassifier(n_estimators=800, n_jobs=-1))])
-    print 'score', score_model(model, xtrain, ytrain)
-    #print model.feature_importances_
-    prepare_submission(model, xtrain, ytrain, xtest, ytest)
+    #model = Pipeline([('scale', StandardScaler()), 
+                      #('rf800', RandomForestClassifier(n_estimators=800, n_jobs=-1))])
+    #print 'score', score_model(model, xtrain, ytrain)
+    ##print model.feature_importances_
+    #prepare_submission(model, xtrain, ytrain, xtest, ytest)
     
