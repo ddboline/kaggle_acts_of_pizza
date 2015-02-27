@@ -172,7 +172,9 @@ def compare_models(xtraindata, ytraindata):
                                                                      test_size=0.4, random_state=randint)
 
     for name, mod in classifier_dict.items():
-        model = Pipeline([('scale', StandardScaler()), (name, mod)])
+        model = Pipeline([('scale', StandardScaler()),
+                          ('pca', PCA(n_components='mle')),
+                          (name, mod),])
         print name
         model.fit(xTrain, yTrain)
         ytpred = model.predict(xTest)
