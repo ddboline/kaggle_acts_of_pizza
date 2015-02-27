@@ -67,45 +67,26 @@ def load_data():
     
     train_df = train_df.drop(labels=XCOLS_TOSS, axis=1)
 
-    for df in train_df, test_df:
-        for c in 'request_text_edit_aware', 'request_title':
-            df[c] = df[c].map(clean_review_function)
+    clean_train_review = train_df['request_text_edit_aware'].apply(clean_review_function)
+    clean_test_review = test_df['request_text_edit_aware'].apply(clean_review_function)
+    clean_train_title = train_df['request_title'].apply(clean_review_function)
+    clean_test_title = test_df['request_title'].apply(clean_review_function)
 
     for df in train_df, test_df:
         for c in 'request_text_edit_aware', 'request_title':
             print c, df[c].shape
 
-    print train_df['request_text_edit_aware'].values.shape,\
-                                  test_df['request_text_edit_aware'].values.shape,\
-                                  train_df['request_title'].values.shape,\
-                                  test_df['request_title'].values.shape
-    
-    #train_vectorizer = []
-    #for l in train_df['request_text_edit_aware'].values:
-        #for w in l:
-            #train_vectorizer.append(w)
-    
-    #train_vectorizer = np.array(train_vectorizer)
-    
-    
-    #train_vectorizer = np.concatenate((train_df['request_text_edit_aware'].values, 
-                                  #test_df['request_text_edit_aware'].values,
-                                  #train_df['request_title'].values,
-                                  #test_df['request_title'].values), axis=0)
-
-    #train_vectorizer = np.concatenate((train_df['request_text_edit_aware'].values, 
-                                  #test_df['request_text_edit_aware'].values,
-                                  #train_df['request_title'].values,
-                                  #test_df['request_title'].values))
-
     nfeatures=1000
     print 'nfeatures', nfeatures
     vectorizer = CountVectorizer(analyzer='word', tokenizer=None,  preprocessor=None, stop_words=None, max_features=nfeatures)
-    train_df['request_text_edit_aware'] = vectorizer.fit_transform(train_df['request_text_edit_aware'].values).toarray()
+    train_review_features = vectorizer.fit_transform(clean_train_review).toarray()
+    test_review_features = vectorizer.transform(clean_test_review).toarray()
+    train_title_features = vectorizer.transform(clean_train_title).toarray()
+    test_title_features = vectorizer.transform(clean_test_title).toarray()
     
-    test_df['request_text_edit_aware'] = vectorizer.transform(test_df['request_text_edit_aware'].values).toarray()
-    train_df['request_title'] = vectorizer.transform(train_df['request_title'].values).toarray()
-    test_df['request_title'] = vectorizer.transform(test_df['request_title'].values).toarray()
+    print train_review_features.shape, test_review_features.shape, train_title_features.shape, test_title_features.shape
+    
+    exit(0)
     
     for df in train_df, test_df:
         #df['request_text_edit_aware'] = df['request_text_edit_aware'].map(review_to_wordlist).map(len)
