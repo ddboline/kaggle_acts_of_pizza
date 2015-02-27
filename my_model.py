@@ -173,7 +173,7 @@ def compare_models(xtraindata, ytraindata):
     scale = StandardScaler()
     xTrain = scale.fit_transform(xTrain)
     xTest = scale.transform(xTest)
-    pca = PCA(n_components='mle')
+    pca = PCA(n_components='mle', whiten=True)
     xTrain = pca.fit_transform(xTrain)
     xTest = pca.transform(xTest)
 
