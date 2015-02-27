@@ -146,8 +146,8 @@ def compare_models(xtraindata, ytraindata):
 
     classifier_dict = {
                 #'linSVC': LinearSVC(),
-                #'kNC5': KNeighborsClassifier(),
-                #'kNC6': KNeighborsClassifier(6),
+                'kNC5': KNeighborsClassifier(),
+                'kNC6': KNeighborsClassifier(6),
                 #'SVC': SVC(kernel="linear", C=0.025),
                 #'DT': DecisionTreeClassifier(max_depth=5),
                 #'RF200': RandomForestClassifier(n_estimators=200, n_jobs=-1),
@@ -158,8 +158,8 @@ def compare_models(xtraindata, ytraindata):
                 #'SVClin': SVC(kernel='linear'),
                 #'SVCpoly': SVC(kernel='poly'),
                 #'SVCsigmoid': SVC(kernel='sigmoid'),
-                #'Gauss': GaussianNB(),
-                #'LDA': LDA(),
+                'Gauss': GaussianNB(),
+                'LDA': LDA(),
                 #'QDA': QDA(),
                 'SVC': SVC(),
                 }
