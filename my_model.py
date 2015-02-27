@@ -97,13 +97,16 @@ def load_data():
         df['requester_account_age_in_days_at_request'] = df['requester_account_age_in_days_at_request'].astype(np.int64)
         df['requester_days_since_first_post_on_raop_at_request'] = df['requester_days_since_first_post_on_raop_at_request'].astype(np.int64)
 
-    for c in train_df.columns:
-        print c, train_df[c].dtype
-
     ytrain = train_df['requester_received_pizza'].astype(np.int64).values
     #print len(ytrain), ytrain.sum()
     
     train_df = train_df.drop(labels=['requester_received_pizza'], axis=1)
+
+    for c in train_df.columns:
+        print c, train_df[c].dtype
+        if train_df[c].dtype == np.int64:
+            train_df[c] = train_df[c].astype(np.float64)
+            test_df[c] = test_df[c].astype(np.float64)
     
     #print train_df.shape, test_df.shape
     #print train_df.columns
