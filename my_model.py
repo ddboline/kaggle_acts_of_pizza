@@ -151,7 +151,7 @@ def compare_models(xtraindata, ytraindata):
                 'Ada': AdaBoostClassifier(),
                 'Gauss': GaussianNB(),
                 'LDA': LDA(),
-                'QDA': QDA(),
+                #'QDA': QDA(),
                 'SVC2': SVC(),
                 }
 
