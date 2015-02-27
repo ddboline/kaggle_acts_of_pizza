@@ -194,6 +194,6 @@ if __name__ == '__main__':
     model = Pipeline([('scale', StandardScaler()), 
                       ('rf800', RandomForestClassifier(n_estimators=800, n_jobs=-1))])
     print 'score', score_model(model, xtrain, ytrain)
-    print model.feature_importances_
+    #print model.feature_importances_
     prepare_submission(model, xtrain, ytrain, xtest, ytest)
     
