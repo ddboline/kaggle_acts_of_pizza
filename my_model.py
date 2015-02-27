@@ -73,7 +73,7 @@ def load_data():
 
     for df in train_df, test_df:
         for c in 'request_text_edit_aware', 'request_title':
-            print df[c].shape
+            print c, df[c].shape
 
     print train_df['request_text_edit_aware'].values.shape,\
                                   test_df['request_text_edit_aware'].values.shape,\
