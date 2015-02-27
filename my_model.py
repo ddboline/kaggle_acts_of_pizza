@@ -152,7 +152,7 @@ def compare_models(xtraindata, ytraindata):
                 #'RF800': RandomForestClassifier(n_estimators=800, n_jobs=-1),
                 #'RF1000': RandomForestClassifier(n_estimators=1000, n_jobs=-1),
                 'Ada': AdaBoostClassifier(),
-                'AdaSVC': AdaBoostClassifier(base_estimator=SVC),
+                #'AdaSVC': AdaBoostClassifier(base_estimator=SVC),
                 'AdaRF': AdaBoostClassifier(base_estimator=RandomForestClassifier),
                 #'Gauss': GaussianNB(),
                 #'LDA': LDA(),
