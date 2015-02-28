@@ -178,7 +178,7 @@ def compare_models(xtraindata, ytraindata):
     print '\n\n\n'
     
     for name in ytrain_vals:
-        print xTrain.shape, xTest.shape, ytrain_vals[name].shape, ytest_vals[name].shape
+        print 'shape3', xTrain.shape, xTest.shape, ytrain_vals[name].shape, ytest_vals[name].shape
         xTrain_temp = np.hstack([xTrain, ytrain_vals[name]])
         xTest_temp = np.hstack([xTest, ytest_vals[name]])
         xTrain = xTrain_temp
