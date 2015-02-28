@@ -157,8 +157,8 @@ def compare_models(xtraindata, ytraindata):
                 }
 
     results = {}
-    ytrain_vals = {}
-    ytest_vals = {}
+    ytrain_vals = []
+    ytest_vals = []
     randint = reduce(lambda x,y: x|y, [ord(x)<<(n*8) for (n,x) in enumerate(os.urandom(4))])
     xTrain, xTest, yTrain, yTest = cross_validation.train_test_split(xtrain,
                                                                      ytrain,
@@ -167,22 +167,19 @@ def compare_models(xtraindata, ytraindata):
     xTrain = scale.fit_transform(xTrain)
     xTest = scale.transform(xTest)
 
-    for name, model in classifier_dict.items():
+    for name, model in sorted(classifier_dict.items()):
         model.fit(xTrain, yTrain)
         ytrpred = model.predict(xTrain)
         ytpred = model.predict(xTest)
         results[name] = roc_auc_score(yTest, ytpred)
-        ytrain_vals[name] = ytrpred
-        ytest_vals[name] = ytpred
+        ytrain_vals.append(ytrpred)
+        ytest_vals.append(ytpred)
         print name, results[name], ytest_vals[name]
     print '\n\n\n'
     
-    for name in ytrain_vals:
-        print 'shape3', xTrain.shape, xTest.shape, ytrain_vals[name].shape, ytest_vals[name].shape
-        xTrain_temp = np.hstack([xTrain, ytrain_vals[name]])
-        xTest_temp = np.hstack([xTest, ytest_vals[name]])
-        xTrain = xTrain_temp
-        xTest = xTest_temp
+    print 'shape3', xTrain.shape, xTest.shape, ytrain_vals[0].shape, ytest_vals[0].shape
+    xTrain = np.hstack([xTrain]+ytrain_vals)
+    xTest = np.hstack([xTest]+ytest_vals)
     
     print '\n\n\n'
     model = RandomForestClassifier(n_estimators=400, n_jobs=-1)
