@@ -84,7 +84,7 @@ def load_data():
     train_title_features = vectorizer.transform(clean_train_title).toarray()
     test_title_features = vectorizer.transform(clean_test_title).toarray()
     
-    print train_review_features.shape, test_review_features.shape, train_title_features.shape, test_title_features.shape
+    print 'shape0', train_review_features.shape, test_review_features.shape, train_title_features.shape, test_title_features.shape
     
     train_df = train_df.drop(labels=['request_text_edit_aware', 'request_title'], axis=1)
     test_df = test_df.drop(labels=['request_text_edit_aware', 'request_title'], axis=1)
@@ -98,31 +98,21 @@ def load_data():
         df['requester_days_since_first_post_on_raop_at_request'] = df['requester_days_since_first_post_on_raop_at_request'].astype(np.int64)
 
     ytrain = train_df['requester_received_pizza'].astype(np.int64).values
-    #print len(ytrain), ytrain.sum()
     
     train_df = train_df.drop(labels=['requester_received_pizza'], axis=1)
 
     for c in train_df.columns:
-        #print c, train_df[c].dtype
         if train_df[c].dtype == np.int64:
             train_df[c] = train_df[c].astype(np.float64)
             test_df[c] = test_df[c].astype(np.float64)
     
-    #print train_df.shape, test_df.shape
-    #print train_df.columns
-    #print test_df.columns
-    
-    print 'shape', train_df.values[:,2:].shape, train_review_features.shape, train_title_features.shape
+    print 'shape1', train_df.values[:,2:].shape, train_review_features.shape, train_title_features.shape
     
     xtrain = np.hstack([train_df.values[:,2:], train_review_features, train_title_features])
     xtest = np.hstack([test_df.values[:,2:], test_review_features, test_title_features])
     ytest = test_df.values[:,1]
     
-    print xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
-    #print xtrain
-    #print ytrain
-    #print xtest
-    #print ytest
+    print 'shape2', xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
     
     return xtrain, ytrain, xtest, ytest
 
@@ -189,8 +179,10 @@ def compare_models(xtraindata, ytraindata):
     
     for name in ytrain_vals:
         print xTrain.shape, xTest.shape, ytrain_vals[name].shape, ytest_vals[name].shape
-        xTrain = np.hstack([xTrain, ytrain_vals[name]])
-        xTest = np.hstack([xTest, ytest_vals[name]])
+        xTrain_temp = np.hstack([xTrain, ytrain_vals[name]])
+        xTest_temp = np.hstack([xTest, ytest_vals[name]])
+        xTrain = xTrain_temp
+        xTest = xTest_temp
     
     print '\n\n\n'
     model = RandomForestClassifier(n_estimators=400, n_jobs=-1)
