@@ -178,12 +178,8 @@ def compare_models(xtraindata, ytraindata):
     print '\n\n\n'
     
     print 'shape3', xTrain.shape, xTest.shape, ytrain_vals[0].shape, ytest_vals[0].shape
-    xtr = np.hstack(ytrain_vals)
-    xte = np.hstack(ytest_vals)
-    
-    print 'shape4', xTrain.shape, xTest.shape, xtr.shape, xte.shape
-    xTrain = np.hstack([xTrain, xtr])
-    xTest = np.hstack([xTest, xte])
+    xTrain = np.hstack([xTrain]+[y.reshape(xTrain.shape[0],1) for y in ytrain_vals])
+    xTest = np.hstack([xTest]+[y.reshape(xTest.shape[0],1) for y in ytest_vals])
     
     print '\n\n\n'
     model = RandomForestClassifier(n_estimators=400, n_jobs=-1)
