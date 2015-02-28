@@ -152,7 +152,7 @@ def compare_models(xtraindata, ytraindata):
                 #'DT': DecisionTreeClassifier(max_depth=5),
                 #'RF200': RandomForestClassifier(n_estimators=200, n_jobs=-1),
                 #'RF400': RandomForestClassifier(n_estimators=400, n_jobs=-1),
-                'RF800': RandomForestClassifier(n_estimators=800, n_jobs=-1),
+                #'RF800': RandomForestClassifier(n_estimators=800, n_jobs=-1),
                 #'RF1000': RandomForestClassifier(n_estimators=1000, n_jobs=-1),
                 'Ada': AdaBoostClassifier(),
                 #'SVClin': SVC(kernel='linear'),
@@ -165,6 +165,7 @@ def compare_models(xtraindata, ytraindata):
                 }
 
     results = {}
+    ytrain_vals = {}
     ytest_vals = {}
     randint = reduce(lambda x,y: x|y, [ord(x)<<(n*8) for (n,x) in enumerate(os.urandom(4))])
     xTrain, xTest, yTrain, yTest = cross_validation.train_test_split(xtrain,
@@ -173,40 +174,26 @@ def compare_models(xtraindata, ytraindata):
     scale = StandardScaler()
     xTrain = scale.fit_transform(xTrain)
     xTest = scale.transform(xTest)
-    pca = PCA(n_components='mle', whiten=True)
-    xTrain = pca.fit_transform(xTrain)
-    xTest = pca.transform(xTest)
 
     for name, model in classifier_dict.items():
-        #model = Pipeline([('scale', StandardScaler()),
-                          #('pca', PCA(n_components='mle')),
-                          #(name, mod),])
-        print name
         model.fit(xTrain, yTrain)
+        ytrpred = model.predict(xTrain)
         ytpred = model.predict(xTest)
         results[name] = roc_auc_score(yTest, ytpred)
+        ytrain_vals[name] = ytrpred
         ytest_vals[name] = ytpred
         print name, results[name], ytest_vals[name]
     print '\n\n\n'
-    ytest_comb = np.sum(y for y in ytest_vals.values())
-    ytest_majority = (ytest_comb > len(ytest_vals)/2).astype(np.int64)
-    ytest_any = (ytest_comb > 0).astype(np.int64)
     
-    print 'majority', roc_auc_score(yTest, ytest_majority)
-    print 'any', roc_auc_score(yTest, ytest_any)
-    for n in range(1,len(ytest_vals)):
-        ytest_n = (ytest_comb > n).astype(np.int64)
-        if np.sum(ytest_n) > 0 :
-            print 'n', n, roc_auc_score(yTest, ytest_n)
+    for name in ytrain_vals:
+        xTrain = np.hstack([xTrain, ytrain_vals[name]])
+        xTest = np.hstack([xTest, ytest_vals[name]])
     
     print '\n\n\n'
-    for name, result in sorted(results.items(), key=lambda x: x[1]):
-        print name, result
-        for n in ytest_vals:
-            if n == name:
-                continue
-            print name, n, len(ytest_vals[name]), np.sum(np.abs(ytest_vals[name] - ytest_vals[n]))
-
+    model = RandomForestClassifier(n_estimators=400, n_jobs=-1)
+    model.fit(xTrain, yTrain)
+    ytpred = model.predict(xTest)
+    print 'RF400', roc_auc_score(yTest, ytpred)
 
 def prepare_submission(model, xtrain, ytrain, xtest, ytest):
     model.fit(xtrain, ytrain)

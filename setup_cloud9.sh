@@ -9,4 +9,6 @@ do
     unzip -x $F;
 done
 
+./my_model.py
+
 ssh ddboline@ddbolineathome.mooo.com "~/bin/send_to_gtalk DONE"
