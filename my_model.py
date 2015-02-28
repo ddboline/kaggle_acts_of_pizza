@@ -180,6 +180,8 @@ def compare_models(xtraindata, ytraindata):
     print 'shape3', xTrain.shape, xTest.shape, ytrain_vals[0].shape, ytest_vals[0].shape
     xtr = np.hstack(ytrain_vals)
     xte = np.hstack(ytest_vals)
+    
+    print 'shape4', xTrain.shape, xTest.shape, xtr.shape, xte.shape
     xTrain = np.hstack([xTrain, xtr])
     xTest = np.hstack([xTest, xte])
     
