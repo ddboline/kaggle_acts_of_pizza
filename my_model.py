@@ -174,7 +174,7 @@ def compare_models(xtraindata, ytraindata):
         results[name] = roc_auc_score(yTest, ytpred)
         ytrain_vals.append(ytrpred)
         ytest_vals.append(ytpred)
-        print name, results[name], ytest_vals[name]
+        print name, results[name], ytest_vals[-1]
     print '\n\n\n'
     
     print 'shape3', xTrain.shape, xTest.shape, ytrain_vals[0].shape, ytest_vals[0].shape
