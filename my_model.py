@@ -178,8 +178,10 @@ def compare_models(xtraindata, ytraindata):
     print '\n\n\n'
     
     print 'shape3', xTrain.shape, xTest.shape, ytrain_vals[0].shape, ytest_vals[0].shape
-    xTrain = np.hstack([xTrain]+ytrain_vals)
-    xTest = np.hstack([xTest]+ytest_vals)
+    xtr = np.hstack(ytrain_vals)
+    xte = np.hstack(ytest_vals)
+    xTrain = np.hstack([xTrain, xtr])
+    xTest = np.hstack([xTest, xte])
     
     print '\n\n\n'
     model = RandomForestClassifier(n_estimators=400, n_jobs=-1)
@@ -200,7 +202,7 @@ def prepare_submission(model, xtrain, ytrain, xtest, ytest):
 if __name__ == '__main__':
     xtrain, ytrain, xtest, ytest = load_data()
     
-    print xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
+    print 'shapes', xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
    
     compare_models(xtrain, ytrain)
     #model = Pipeline([('scale', StandardScaler()), 
