@@ -112,6 +112,8 @@ def load_data():
     #print train_df.columns
     #print test_df.columns
     
+    print 'shape', train_df.values[:,2:].shape, train_review_features.shape, train_title_features.shape
+    
     xtrain = np.hstack([train_df.values[:,2:], train_review_features, train_title_features])
     xtest = np.hstack([test_df.values[:,2:], test_review_features, test_title_features])
     ytest = test_df.values[:,1]
