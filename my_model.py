@@ -67,24 +67,27 @@ def load_data():
     
     train_df = train_df.drop(labels=XCOLS_TOSS, axis=1)
 
-    clean_train_review = train_df['request_text_edit_aware'].apply(clean_review_function)
-    clean_test_review = test_df['request_text_edit_aware'].apply(clean_review_function)
-    clean_train_title = train_df['request_title'].apply(clean_review_function)
-    clean_test_title = test_df['request_title'].apply(clean_review_function)
+    use_text_data = False
 
-    #for df in train_df, test_df:
-        #for c in 'request_text_edit_aware', 'request_title':
-            #print c, df[c].shape
+    if use_text_data:
+        clean_train_review = train_df['request_text_edit_aware'].apply(clean_review_function)
+        clean_test_review = test_df['request_text_edit_aware'].apply(clean_review_function)
+        clean_train_title = train_df['request_title'].apply(clean_review_function)
+        clean_test_title = test_df['request_title'].apply(clean_review_function)
 
-    nfeatures=1000
-    print 'nfeatures', nfeatures
-    vectorizer = CountVectorizer(analyzer='word', tokenizer=None,  preprocessor=None, stop_words=None, max_features=nfeatures)
-    train_review_features = vectorizer.fit_transform(clean_train_review).toarray()
-    test_review_features = vectorizer.transform(clean_test_review).toarray()
-    train_title_features = vectorizer.transform(clean_train_title).toarray()
-    test_title_features = vectorizer.transform(clean_test_title).toarray()
-    
-    print 'shape0', train_review_features.shape, test_review_features.shape, train_title_features.shape, test_title_features.shape
+        #for df in train_df, test_df:
+            #for c in 'request_text_edit_aware', 'request_title':
+                #print c, df[c].shape
+
+        nfeatures=1000
+        print 'nfeatures', nfeatures
+        vectorizer = CountVectorizer(analyzer='word', tokenizer=None,  preprocessor=None, stop_words=None, max_features=nfeatures)
+        train_review_features = vectorizer.fit_transform(clean_train_review).toarray()
+        test_review_features = vectorizer.transform(clean_test_review).toarray()
+        train_title_features = vectorizer.transform(clean_train_title).toarray()
+        test_title_features = vectorizer.transform(clean_test_title).toarray()
+        
+        print 'shape0', train_review_features.shape, test_review_features.shape, train_title_features.shape, test_title_features.shape
     
     train_df = train_df.drop(labels=['request_text_edit_aware', 'request_title'], axis=1)
     test_df = test_df.drop(labels=['request_text_edit_aware', 'request_title'], axis=1)
@@ -106,11 +109,16 @@ def load_data():
             train_df[c] = train_df[c].astype(np.float64)
             test_df[c] = test_df[c].astype(np.float64)
     
-    print 'shape1', train_df.values[:,2:].shape, train_review_features.shape, train_title_features.shape
-    
-    xtrain = np.hstack([train_df.values[:,2:], train_review_features, train_title_features])
-    xtest = np.hstack([test_df.values[:,2:], test_review_features, test_title_features])
-    ytest = test_df.values[:,1]
+    if use_text_data:
+        print 'shape1', train_df.values[:,2:].shape, train_review_features.shape, train_title_features.shape
+        
+        xtrain = np.hstack([train_df.values[:,2:], train_review_features, train_title_features])
+        xtest = np.hstack([test_df.values[:,2:], test_review_features, test_title_features])
+        ytest = test_df.values[:,1]
+    else:
+        xtrain = train_df.values[:,2:]
+        xtest = test_df.values[:,2:]
+        ytest = test_df.values[:,1]
     
     print 'shape2', xtrain.shape, ytrain.shape, xtest.shape, ytest.shape
     
@@ -143,7 +151,8 @@ def compare_models(xtraindata, ytraindata):
                 #'SVC': SVC(kernel="linear", C=0.025),
                 #'DT': DecisionTreeClassifier(max_depth=5),
                 #'RF200': RandomForestClassifier(n_estimators=200, n_jobs=-1),
-                #'RF400': RandomForestClassifier(n_estimators=400, n_jobs=-1),
+                'RF400gini': RandomForestClassifier(n_estimators=400, n_jobs=-1),
+                'RF400entropy': RandomForestClassifier(n_estimators=400, n_jobs=-1, criterion='entropy'),
                 #'RF800': RandomForestClassifier(n_estimators=800, n_jobs=-1),
                 #'RF1000': RandomForestClassifier(n_estimators=1000, n_jobs=-1),
                 'Ada': AdaBoostClassifier(),
@@ -160,8 +169,8 @@ def compare_models(xtraindata, ytraindata):
     ytrain_vals = []
     ytest_vals = []
     randint = reduce(lambda x,y: x|y, [ord(x)<<(n*8) for (n,x) in enumerate(os.urandom(4))])
-    xTrain, xTest, yTrain, yTest = cross_validation.train_test_split(xtrain,
-                                                                     ytrain,
+    xTrain, xTest, yTrain, yTest = cross_validation.train_test_split(xtraindata,
+                                                                     ytraindata,
                                                                      test_size=0.4, random_state=randint)
     scale = StandardScaler()
     xTrain = scale.fit_transform(xTrain)
