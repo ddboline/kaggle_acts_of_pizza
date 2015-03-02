@@ -67,7 +67,7 @@ def load_data():
     
     train_df = train_df.drop(labels=XCOLS_TOSS, axis=1)
 
-    use_text_data = False
+    use_text_data = True
 
     if use_text_data:
         clean_train_review = train_df['request_text_edit_aware'].apply(clean_review_function)
